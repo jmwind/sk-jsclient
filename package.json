@@ -1,0 +1,16 @@
+{
+  "private": false,
+  "name": "sk-jsclient",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "cli.js",
+  "type": "module",
+  "dependencies": {
+    "eventemitter3": "^4.0.7",
+    "ws": "^8.8.1"
+  },
+  "exports": {
+    "./client": "./src/sk-client.js",
+    "./data": "./src/sk-data.js"
+  }
+}
