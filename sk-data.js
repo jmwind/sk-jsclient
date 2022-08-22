@@ -6,7 +6,7 @@ export class SkData {
             'environment.wind.speedTrue': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "TWS", positionUnit: "down" },
             'environment.wind.angleApparent': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "AWA", positionUnit: "up" },
             'environment.wind.angleTrueGround': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "TWA", positionUnit: "up" },
-            'navigation.speedOverGround': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "AWS", positionUnit: "down" }
+            'navigation.speedOverGround': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "SOG", positionUnit: "down" }
         }
     }
 }

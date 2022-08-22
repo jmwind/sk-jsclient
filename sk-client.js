@@ -66,19 +66,6 @@ export default class SkClient extends EventEmitter {
     get(key) {
         return this.options[key] || null
     }
-    /* now done in instrumentpanel.js
-      set connectionInfo (data) {
-        debug(`[set connectionInfo] data=${JSON.stringify(data)}`)
-        this._connection = data
-        if (data !== null) {
-          this.emit('connectionInfo', data)
-        }
-      }
-    
-      get connectionInfo () {
-        return this._connection
-      }
-    */
 
     buildURI(protocol) {
         let uri = this.options.useTLS === true ? `${protocol}s://` : `${protocol}://`
