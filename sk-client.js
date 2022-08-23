@@ -3,6 +3,7 @@
  * Inspired by https://github.com/SignalK/signalk-js-client from Fabian Tollenaar <fabian@decipher.industries>
  */
 import EventEmitter from 'eventemitter3'
+import { SkData } from './sk-data';
 
 export default class SkClient extends EventEmitter {
     constructor(websocket_factory, options = {}) {
@@ -237,6 +238,7 @@ export default class SkClient extends EventEmitter {
                         for (const event of update.values) {
                             if (event.path in this.state) {
                                 this.state[event.path].value = event.value;
+                                this.state['navigation.polarSpeedRatio'].value = Math.random();
                                 this.emit('delta', data);
                             }
                         }
