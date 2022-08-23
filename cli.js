@@ -57,7 +57,7 @@ client.on('delta', echoLog);
 client.on('delta', echoSerial);
 client.connect();
 
-sleep(60000).then(() => {
+sleep(180000).then(() => {
     client.off('delta');
     client.disconnect();
 });
