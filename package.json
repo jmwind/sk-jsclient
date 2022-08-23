@@ -7,6 +7,7 @@
   "type": "module",
   "dependencies": {
     "eventemitter3": "^4.0.7",
+    "serialport": "^10.4.0",
     "ws": "^8.8.1"
   },
   "exports": {

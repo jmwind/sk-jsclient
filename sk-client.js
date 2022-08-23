@@ -3,7 +3,7 @@
  * Inspired by https://github.com/SignalK/signalk-js-client from Fabian Tollenaar <fabian@decipher.industries>
  */
 import EventEmitter from 'eventemitter3'
-import { SkData } from './sk-data';
+import { SkData } from './sk-data.js';
 
 export default class SkClient extends EventEmitter {
     constructor(websocket_factory, options = {}) {
