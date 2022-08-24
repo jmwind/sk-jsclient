@@ -4,6 +4,7 @@ import WebSocket from 'ws';
 import { SerialPort } from 'serialport'
 
 let state = SkData.newMetrics();
+let g1_val = 0;
 
 const port = new SerialPort({
     path: '/dev/serial0',
@@ -33,12 +34,32 @@ function echoSerial(msg, fn) {
     let aws_val = SkConversions.fromMetric(aws);
     let awa_val = SkConversions.fromMetric(awa);
     let sog_val = SkConversions.fromMetric(sog);
-    let lmiddle = encode(`lmiddle.txt="${sog_val}"`);
+    g1_val++;
+    if(g1_val > 360) {
+        g1_val = 0;
+    }
+    // this normalizes into a range. The * is the height of the waveform from 
+    // Nextrion and the 35kn the max wind range
+    let aws_norm = ((aws_val / 35) * 77).toFixed(0);
+    let lmiddle = encode(`lmiddle.txt="${aws_val}"`);
     let rtop = encode(`rtop.txt="${awa_val}"`);
-    let rbottom = encode(`rbottom.txt="${aws_val}"`);
+    let rbottom = encode(`rbottom.txt="${sog_val}"`);
+    let g1 = encode(`g1.val=${g1_val.toFixed(0)}`);
+    let g1t = encode(`g1t.txt="${g1_val.toFixed(0)}%"`);
+    let wave = encode(`add 15,0,${aws_norm}`);
+    let wave2 = encode(`add 15,1,${aws_norm}+1`);
+    let wave3 = encode(`add 15,2,${aws_norm}-1`);
+    let wave4 = encode(`add 15,3,${aws_norm}-1`);
+    
     port.write(lmiddle);
     port.write(rtop);
     port.write(rbottom);
+    port.write(g1);
+    port.write(g1t);
+    port.write(wave);
+    port.write(wave2);
+    port.write(wave3);
+    port.write(wave4);
 }
 
 function echoLog(msg, fn) {
