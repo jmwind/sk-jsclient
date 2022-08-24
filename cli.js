@@ -1,15 +1,10 @@
 import SkClient from './sk-client.js';
-import { SkConversions, SkData } from './sk-data.js'
+import { SkConversions, SkData, SkPolars } from './sk-data.js'
 import WebSocket from 'ws';
 import { SerialPort } from 'serialport'
 
 let state = SkData.newMetrics();
 let g1_val = 0;
-
-const port = new SerialPort({
-    path: '/dev/serial0',
-    baudRate: 9600,
-  }, (err) => {if(err) console.log("error opening port")})
 
 function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
@@ -17,9 +12,9 @@ function sleep(time) {
 
 function encode(str) {
     var arr = [];
-    for (var i = 0, l = str.length; i < l; i ++) {
-            var ascii = str.charCodeAt(i);
-            arr.push(ascii);
+    for (var i = 0, l = str.length; i < l; i++) {
+        var ascii = str.charCodeAt(i);
+        arr.push(ascii);
     }
     arr.push(255);
     arr.push(255);
@@ -28,6 +23,12 @@ function encode(str) {
 }
 
 function echoSerial(msg, fn) {
+    const port = new SerialPort({
+        path: '/dev/serial0',
+        baudRate: 9600,
+    }, (err) => {
+        if (err) console.log("error opening serial port")
+    });
     let aws = state['environment.wind.speedApparent'];
     let awa = state['environment.wind.angleApparent'];
     let sog = state['navigation.speedOverGround'];
@@ -35,7 +36,7 @@ function echoSerial(msg, fn) {
     let awa_val = SkConversions.fromMetric(awa);
     let sog_val = SkConversions.fromMetric(sog);
     g1_val++;
-    if(g1_val > 360) {
+    if (g1_val > 360) {
         g1_val = 0;
     }
     // this normalizes into a range. The * is the height of the waveform from 
@@ -50,7 +51,7 @@ function echoSerial(msg, fn) {
     let wave2 = encode(`add 15,1,${aws_norm}+1`);
     let wave3 = encode(`add 15,2,${aws_norm}-1`);
     let wave4 = encode(`add 15,3,${aws_norm}-1`);
-    
+
     port.write(lmiddle);
     port.write(rtop);
     port.write(rbottom);
@@ -72,13 +73,43 @@ function echoLog(msg, fn) {
     console.log(`SOG: ${sog_val}${sog.nameUnit} AWS: ${aws_val}${aws.nameUnit} AWA: ${awa_val}${awa.nameUnit}`);
 }
 
-const client = new SkClient((url) => { return new WebSocket(url) });
-client.setState(state);
-client.on('delta', echoLog);
-client.on('delta', echoSerial);
-client.connect();
+function dumpMetrics(metricType) {
+    const client = new SkClient((url) => { return new WebSocket(url) });
+    client.setState(state);
+    client.on('delta', echoLog);
+    if (metricType == "serial") {
+        client.on('delta', echoSerial);
+    }
+    client.connect();
 
-sleep(180000).then(() => {
-    client.off('delta');
-    client.disconnect();
-});
+    sleep(180000).then(() => {
+        client.off('delta');
+        client.disconnect();
+    });
+}
+
+function loadPolarFiles(filename) {
+    console.log(`Reading polars from ${filename}...`);
+    SkPolars.readFromFile(filename, (polars) => {
+        console.log(JSON.stringify(polars));
+    });
+}
+
+function error(msg) {
+    console.log("usage: cli.js [--metrics <serial> | --polars <filename> TWS TWA]");
+    console.log(msg);
+    process.exit(1);
+}
+
+const args = process.argv.slice(2);
+if (args[0] == "--metrics") {
+    dumpMetrics(args[1]);
+} else if (args[0] == "--polars") {
+    if (args[1] == undefined) {
+        error("--polars requires a filename parameter");
+    }
+    loadPolarFiles(args[1]);
+} else {
+    error("missing command line parameters");
+}
+

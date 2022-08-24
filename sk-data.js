@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 
 export class SkData {
     static newMetrics() {
@@ -9,6 +11,38 @@ export class SkData {
             'navigation.speedOverGround': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "SOG", positionUnit: "down" },
             'navigation.polarSpeedRatio': { value: 0, unit: "percent", displayUnit: "percent", nameUnit: "%", nameMetric: "Polar Ratio", positionUnit: "down" }
         }
+    }
+}
+
+export class SkPolars {
+    // returns {TWS -> [{TWA, SOG}]}
+    static readFromFile(filename, success) {
+        let polars = {};
+        fs.readFile(filename, 'utf8', (err, data) => {
+            if (err) {
+                throw err;
+            }
+            let lines = data.split(/\r?\n/);
+            lines.forEach(line => {
+                let line_polars = [];
+                let tokens = line.split(/\s{1,}|\\t{1,}/);
+                if (tokens[0] == "!") {
+                    return;
+                }
+                let tws = parseInt(tokens[0]);
+                let i = 1;
+                while (i < tokens.length) {
+                    if (i + 1 > tokens.length) {
+                        console.log("error in polars file, skipping line");
+                        return;
+                    }
+                    line_polars.push({ twa: parseInt(tokens[i]), sog: parseFloat(tokens[++i]) });
+                    i++;
+                }
+                polars[tws] = line_polars;
+            });
+            success(polars);
+        });
     }
 }
 

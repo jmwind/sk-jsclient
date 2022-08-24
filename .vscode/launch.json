@@ -7,11 +7,27 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Metrics",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/cli.js"
+            "args": [
+                "--metrics"
+            ],
+            "program": "${workspaceFolder}/cli.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Polars",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "args": [
+                "--polars",
+                "data/catalina36_polar.txt"
+            ],
+            "program": "${workspaceFolder}/cli.js"
         }
     ]
 }
