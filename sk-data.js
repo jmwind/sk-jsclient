@@ -6,7 +6,8 @@ export class SkData {
             'environment.wind.angleApparent': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "AWA", rounding: 0 },
             'environment.wind.angleTrueGround': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "TWA", rounding: 0 },
             'navigation.speedOverGround': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "SOG", rounding: 1 },
-            'navigation.polarSpeedRatio': { value: 0, unit: "kts", displayUnit: "knot", nameUnit: "Kts", nameMetric: "Polar Speed Target", rounding: 1 }
+            'navigation.polarSpeedRatio': { value: 0, unit: "percent", displayUnit: "percent", nameUnit: "%", nameMetric: "Polar Speed Ratio", rounding: 0 },
+            'navigation.polarSpeedTarget': { value: 0, unit: "kts", displayUnit: "knot", nameUnit: "Kts", nameMetric: "Polar Speed Target", rounding: 1 }
         }
     }
 }
@@ -102,9 +103,6 @@ export class SkConversions {
         }
         if (unit == "rad" && toUnit == "angle") {
             return (value * (180 / 3.14159265359));
-        }
-        if (unit == "percent") {
-            return (value * (100));
         }
         return value;
     }

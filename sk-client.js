@@ -247,7 +247,10 @@ export default class SkClient extends EventEmitter {
                                 if (this.polars) {
                                     let aws = SkConversions.fromMetric(this.state['environment.wind.speedApparent']);
                                     let awa = SkConversions.fromMetric(this.state['environment.wind.angleApparent']);
-                                    this.state['navigation.polarSpeedRatio'].value = SkPolars.getSogFor(this.polars, aws, awa);
+                                    let sog = SkConversions.fromMetric(this.state['navigation.speedOverGround']);
+                                    let sog_target = SkPolars.getSogFor(this.polars, aws, awa);
+                                    this.state['navigation.polarSpeedTarget'].value = sog_target;
+                                    this.state['navigation.polarSpeedRatio'].value = sog_target > 0 ? ((sog / sog_target) * 100) : 0;
                                 }
                             }
                         }
