@@ -25,7 +25,9 @@
             ],
             "args": [
                 "--polars",
-                "data/catalina36_polar.txt"
+                "data/catalina36_polar.txt",
+                "12.1",
+                "87"
             ],
             "program": "${workspaceFolder}/cli.js"
         }

@@ -3,7 +3,7 @@
  * Inspired by https://github.com/SignalK/signalk-js-client from Fabian Tollenaar <fabian@decipher.industries>
  */
 import EventEmitter from 'eventemitter3'
-import { SkData } from './sk-data.js';
+import { SkData, SkPolars, SkConversions } from './sk-data.js';
 
 export default class SkClient extends EventEmitter {
     constructor(websocket_factory, options = {}) {
@@ -53,6 +53,10 @@ export default class SkClient extends EventEmitter {
 
     setState(state) {
         this.state = state;
+    }
+
+    setPolars(polars) {
+        this.polars = polars;
     }
 
     debug(msg) {
@@ -238,8 +242,13 @@ export default class SkClient extends EventEmitter {
                         for (const event of update.values) {
                             if (event.path in this.state) {
                                 this.state[event.path].value = event.value;
-                                this.state['navigation.polarSpeedRatio'].value = Math.random();
                                 this.emit('delta', data);
+                                // update custom attributes
+                                if (this.polars) {
+                                    let aws = SkConversions.fromMetric(this.state['environment.wind.speedApparent']);
+                                    let awa = SkConversions.fromMetric(this.state['environment.wind.angleApparent']);
+                                    this.state['navigation.polarSpeedRatio'].value = SkPolars.getSogFor(this.polars, aws, awa);
+                                }
                             }
                         }
                     }
