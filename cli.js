@@ -2,25 +2,26 @@ import SkClient from './sk-client.js';
 import { SkConversions, SkData, SkPolars, CATALINA_36_POLARS } from './sk-data.js'
 import WebSocket from 'ws';
 
+// keep global set of metrics that will be updated by client
 let state = SkData.newMetrics();
-let g1_val = 0;
 
-function sleep(time) {
+const sleep = (time) => {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-function echoLog(msg, fn) {
-    let aws = state['environment.wind.speedApparent'];
-    let awa = state['environment.wind.angleApparent'];
-    let sog = state['navigation.speedOverGround'];
-    let speed_ratio = this.state['navigation.polarSpeedRatio'].value;
+const echoLog = (msg, fn) => {
+    let aws = state[SkData.AWS];
+    let awa = state[SkData.AWA];
+    let sog = state[SkData.SOG];
+    let speed_ratio = state[SkData.POLAR_RATIO].value;
+    let speed_target = state[SkData.POLAR_TARGET].value;
     let aws_val = SkConversions.fromMetric(aws).toFixed(1);
     let awa_val = SkConversions.fromMetric(awa).toFixed(0);
     let sog_val = SkConversions.fromMetric(sog).toFixed(1);
-    console.log(`SOG: ${sog_val}${sog.nameUnit} target is ${speed_ratio.toFixed(1)} which is ${(sog_val / speed_ratio * 100).toFixed(2)}% AWS: ${aws_val}${aws.nameUnit} AWA: ${awa_val}${awa.nameUnit}`);
+    console.log(`SOG: ${sog_val} ${sog.nameUnit} target is ${speed_target.toFixed(1)} Kts which is ${speed_ratio.toFixed(0)}% AWS: ${aws_val} ${aws.nameUnit} AWA: ${awa_val}${awa.nameUnit}`);
 }
 
-function dumpMetrics(metricType) {
+const dumpMetrics = (metricType) => {
     const client = new SkClient((url) => { return new WebSocket(url) });
     client.setState(state);
     let polars = SkPolars.readFromFileContents(CATALINA_36_POLARS);
@@ -37,7 +38,7 @@ function dumpMetrics(metricType) {
     });
 }
 
-function error(msg) {
+const error = (msg) => {
     console.log("usage: cli.js [--metrics <serial | log> | --polars TWS TWA]");
     console.log(msg);
     process.exit(1);

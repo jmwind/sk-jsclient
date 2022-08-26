@@ -1,13 +1,20 @@
 export class SkData {
+    static AWS = 'environment.wind.speedApparent';
+    static TWS = 'environment.wind.speedTrue';
+    static AWA = 'environment.wind.angleApparent';
+    static TWA = 'environment.wind.angleTrueGround';
+    static SOG = 'navigation.speedOverGround';
+    static POLAR_RATIO = 'navigation.polarSpeedRatio';
+    static POLAR_TARGET = 'navigation.polarSpeedTarget';
     static newMetrics() {
         return {
-            'environment.wind.speedApparent': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "AWS", rounding: 1 },
-            'environment.wind.speedTrue': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "TWS", rounding: 1 },
-            'environment.wind.angleApparent': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "AWA", rounding: 0 },
-            'environment.wind.angleTrueGround': { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "TWA", rounding: 0 },
-            'navigation.speedOverGround': { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "SOG", rounding: 1 },
-            'navigation.polarSpeedRatio': { value: 0, unit: "percent", displayUnit: "percent", nameUnit: "%", nameMetric: "Polar Speed Ratio", rounding: 0 },
-            'navigation.polarSpeedTarget': { value: 0, unit: "kts", displayUnit: "knot", nameUnit: "Kts", nameMetric: "Polar Speed Target", rounding: 1 }
+            [this.AWS]: { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "AWS", rounding: 1 },
+            [this.TWS]: { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "TWS", rounding: 1 },
+            [this.AWA]: { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "AWA", rounding: 0 },
+            [this.TWA]: { value: 0, unit: "rad", displayUnit: "angle", nameUnit: String.fromCharCode(176), nameMetric: "TWA", rounding: 0 },
+            [this.SOG]: { value: 0, unit: "m/s", displayUnit: "knot", nameUnit: "Kts", nameMetric: "SOG", rounding: 1 },
+            [this.POLAR_RATIO]: { value: 0, unit: "percent", displayUnit: "percent", nameUnit: "%", nameMetric: "Polar Speed Ratio", rounding: 0 },
+            [this.POLAR_TARGET]: { value: 0, unit: "kts", displayUnit: "knot", nameUnit: "Kts", nameMetric: "Polar Speed Target", rounding: 1 }
         }
     }
 }
